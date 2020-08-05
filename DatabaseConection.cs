@@ -37,7 +37,7 @@ namespace DBConection
 
         public int readAllDB(string table)
         {
-            
+            //corrigir o problema do autoincrement. ao deletar todo os dados, o id não inicia de 1
             var startDB = new SqliteConnection("Data Source = db\\db.db;");
             startDB.Open();
 

@@ -37,7 +37,7 @@ namespace DBConection
 
         public int readAllDB(string table)
         {
-            //corrigir o problema do autoincrement. ao deletar todo os dados, o id não inicia de 1
+            
             var startDB = new SqliteConnection("Data Source = db\\db.db;");
             startDB.Open();
 
@@ -49,7 +49,8 @@ namespace DBConection
             int n = 0;
             while(result.Read())
             {
-                Console.WriteLine(" id: " + result["id"] +  " serviço: " + result["serviço"] + " usuario: " + result["usuario"] + " senha: " + result["senha"]);
+                Console.WriteLine(" id > " + result["id"] +  " | serviço: " + result["serviço"] + " | usuario: " + result["usuario"] + " | senha: " + result["senha"]);
+                Console.WriteLine("_____________________________________________________________________________________________________________");
                 n++;
             }
 
@@ -105,6 +106,20 @@ namespace DBConection
                 Console.WriteLine("deletado com sucesso...");
             }
             
+            startDB.Close();
+        }
+
+        public void edit(int id, String login, String senha, String servico)
+        {
+            var startDB = new SqliteConnection("Data Source = db\\db.db;");
+            startDB.Open();
+
+            query = "UPDATE pass_log SET usuario = " + "'" + login + "'" + "," + "senha = " + "'" + senha + "'" + "," + "serviço = " + "'" + servico + "'" + "WHERE id = " + id;
+            var command = new SqliteCommand(query, startDB); 
+
+            command.ExecuteNonQuery();
+
+            Console.WriteLine("Alterado com sucesso...");
             startDB.Close();
         }
     }

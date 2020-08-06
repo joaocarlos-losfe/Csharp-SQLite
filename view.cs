@@ -12,6 +12,7 @@ namespace ViewMenu
         
             while(true)
             {
+                start_db.StartDB();
                 Console.WriteLine("lendo database...");
                 Console.Clear();
 
@@ -36,7 +37,11 @@ namespace ViewMenu
                     break;
 
                     case '4':
-                        Deletar(); 
+                        Deletar();
+                    break;
+
+                    case '5':
+                        Exportar_para_TXT();
                     break;
 
                     default: Console.WriteLine("opcao invalida");
@@ -105,6 +110,7 @@ namespace ViewMenu
                 if(key == 'S' || key == 's')
                 {
                     start_db.edit(id, login, senha, servico);
+                    Console.WriteLine("Alterado com sucesso..."); Console.ReadKey();
                 }
                 else
                 {
@@ -121,6 +127,11 @@ namespace ViewMenu
 
             start_db.delete(id, ok); // deletar
             Console.ReadKey();
+        }
+
+        public void Exportar_para_TXT()
+        {
+            start_db.export_to_txt(0, true);
         }
 
     }

@@ -7,6 +7,8 @@ namespace DBConection
     class Conection
     {
         string query = null;
+        string key_init_aplication;
+        string key = "";
         public void StartDB()
         {
             if(!File.Exists("db\\db.db"))
@@ -17,7 +19,27 @@ namespace DBConection
             {
                 var startDB = new SqliteConnection("Data Source = db\\db.db;");
                 startDB.Open();
-                Console.WriteLine("base de dados carregado com sucesso...");
+
+                if(!File.Exists("db\\config.dat"))
+                {
+                    File.Create("db\\config.dat");
+                }
+                else
+                {
+                    key_init_aplication = System.IO.File.ReadAllText("db\\config.dat");
+
+                    while( key.Equals(key_init_aplication) == false )
+                    {
+                        Console.Clear();
+                        Console.Write("key init: "); key = Console.ReadLine();
+
+                        if(key.Equals(key_init_aplication))
+                        {
+                            Console.WriteLine("ok...");
+                        }
+                    }
+
+                }
             }
         }
 
@@ -121,6 +143,42 @@ namespace DBConection
 
             Console.WriteLine("Alterado com sucesso...");
             startDB.Close();
+        }
+
+        public void export_to_txt(int id, bool all)
+        {
+            if(all == true)
+            {
+                
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); // obter o caminho da pasta desktop
+                
+                var startDB = new SqliteConnection("Data Source = db\\db.db;");
+                startDB.Open();
+
+                query = "Select * from pass_log";
+                var command = new SqliteCommand(query, startDB); 
+                SqliteDataReader result = command.ExecuteReader();
+
+                string finalPath = desktopPath + "\\keyapp" + DateTime.Now.ToString("D") + ".txt";
+
+                using (StreamWriter file = new StreamWriter(@finalPath))
+                {
+                    while(result.Read())
+                    {
+                        file.WriteLine("serviço: " + result["serviço"] + " usuario: " + result["usuario"] + " senha: " + result["senha"]);
+                    }
+                }
+                
+                Console.WriteLine("Exportado com sucesso para > " + finalPath + " <");
+                Console.ReadKey();
+
+                System.Diagnostics.Process.Start("notepad", finalPath); //abrindo o app com o caminho do arquivo
+                startDB.Close();
+            }
+            else
+            {
+
+            }
         }
     }
 }
